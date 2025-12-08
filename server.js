@@ -1,10 +1,13 @@
 import http from "http";
 import path from "path";
 import fs from "fs";
-import fsPromises from "fsPromises";
 import EventEmitter from "events";
+import { fileURLToPath } from "url";
 
-import { logEvents } from "./logs/logEvents.txt";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+import { logEvents } from "./logEvents.js";
 
 class TheEmitter extends EventEmitter {}
 const emitter = new TheEmitter();
@@ -19,12 +22,12 @@ const serveFile = async (filePath, contentType, response) => {
     try {
         const rawData = await fs.promises.readFile(
             filePath,
-            !contentType.include("image") ? "utf8" : ""
+            !contentType.includes("image") ? "utf8" : ""
         );
         const data =
             contentType === "application.json" ? JSON.parse(rawData) : rawData;
 
-        response.writeHead(filePath.include("404.html") ? 404 : 200),
+        response.writeHead(filePath.includes("404.html") ? 404 : 200),
             { "Content-Type": contentType };
 
         response.end(
@@ -42,6 +45,7 @@ const serveFile = async (filePath, contentType, response) => {
 const server = http.createServer((req, res) => {
     console.log(req.url, req.method);
     emitter.emit("log", `${req.url}\t ${req.method}`, "reqLog.txt");
+    let contentType;
 
     const extention = path.extname(req.url);
 
