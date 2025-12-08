@@ -8,3 +8,7 @@ import { logEvents } from "./logs/logEvents.txt";
 
 class TheEmitter extends EventEmitter {}
 const emitter = new TheEmitter();
+
+emitter.on("log", (msg, fileName) => logEvents(msg, fileName));
+
+const PORT = process.env.PORT || 8080;
