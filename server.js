@@ -79,4 +79,30 @@ const server = http.createServer((req, res) => {
             : contentType === "text.html"
             ? path.join(__dirname, "views", req.url)
             : path.join(__dirname, req.url);
+
+    //hvis ikke fileextention og ikke slutter med /, antar vi .html
+
+    if (!extention && req.url.slice(-1) !== "/") filePath += ".html";
+
+    const fileExists = fs.existsSync(filePath);
+
+    if (fileExists) {
+        //lever ønsket fil til klient
+        serveFile(filePath, contentType, res);
+    } else {
+        //404 feil eller redirect
+
+        switch (path.parse(filePath).base) {
+            //legg inn andre caser hvis du vil som f.exs. rederecter til "/"
+
+            default:
+                serveFile(
+                    path.join(__dirname, "views", "404.html"),
+                    "text/html",
+                    res
+                );
+        }
+    }
 });
+
+server.listen(PORT, () => {});
