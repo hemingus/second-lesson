@@ -12,3 +12,14 @@ const emitter = new TheEmitter();
 emitter.on("log", (msg, fileName) => logEvents(msg, fileName));
 
 const PORT = process.env.PORT || 8080;
+
+
+//Hjelpefunksjoner for filbehandling
+
+const serveFile = async (filePath, contentType, response) => {
+    try {
+        const rawData
+    } catch (err) {
+        console.error(err)
+    }
+} 
