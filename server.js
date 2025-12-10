@@ -99,7 +99,7 @@ const server = http.createServer((req, res) => {
         switch (path.parse(filePath).base) {
             //legg inn andre caser hvis du vil som f.exs. rederecter til "/"
             case "old-page.html":
-                res.writeHead(301, {Location: "new-page.html"});
+                res.writeHead(301, {Location: "/new-page.html"});
                 res.end();
                 break;
             case "www-index.html":
