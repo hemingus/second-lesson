@@ -35,7 +35,7 @@ const serveFile = async (filePath, contentType, response) => {
         );
     } catch (err) {
         console.error(err);
-        emitter.emit("log", `${err.name} : ${err.message}`, "log.txt");
+        emitter.emit("log", `${err.name} : ${err.message}`, "errLog.txt");
         response.statusCode = 500;
         response.end();
     }
@@ -79,10 +79,10 @@ const server = http.createServer((req, res) => {
         contentType === "text.html" && req.url === "/"
             ? path.join(__dirname, "views", "index.html")
             : contentType && req.url.slice(-1) === "/"
-            ? path.join(__dirname, "views", req.url, "index.html")
-            : contentType === "text.html"
-            ? path.join(__dirname, "views", req.url)
-            : path.join(__dirname, req.url);
+                ? path.join(__dirname, "views", req.url, "index.html")
+                : contentType === "text.html"
+                    ? path.join(__dirname, "views", req.url)
+                    : path.join(__dirname, req.url);
 
     //hvis ikke fileextention og ikke slutter med /, antar vi .html
 
@@ -98,7 +98,14 @@ const server = http.createServer((req, res) => {
 
         switch (path.parse(filePath).base) {
             //legg inn andre caser hvis du vil som f.exs. rederecter til "/"
-
+            case "old-page.html":
+                res.writeHead(301, {"Location": "/new-page.html"});
+                res.end();
+                break;
+            case "www-index.html":
+                res.writeHead(301, {"Location": "/"});
+                res.end();
+                break;
             default:
                 serveFile(
                     path.join(__dirname, "views", "404.html"),
